@@ -1,29 +1,23 @@
 import React, { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { PasosTramite } from '../../../components/PasosTramite';
+import { SelectorImagen } from '../../../components/SelectorImagen';
+import { VistaAntesDespues } from '../../../components/VistaAntesDespues';
+import { generarPDF } from '../../../utils/pdfUtils';
 import { colors, spacing, typography } from '../../../theme';
 
 export default function FotoPDF({ navigation }: any) {
-  const [imagenes, setImagenes] = useState<string[]>([]);
-  const [nombre, setNombre] = useState('');
-  const [paso, setPaso] = useState(1);
-
-  const reiniciar = () => { setImagenes([]); setNombre(''); setPaso(1); navigation.navigate('Home'); };
-  const continuar = () => {
-    if (!imagenes.length) return Alert.alert('Falta una foto', 'Agrega al menos una imagen para continuar.');
-    if (paso < 4) setPaso(paso + 1);
-    else Alert.alert('PDF listo', 'La generación nativa del PDF se conectará en la siguiente etapa.');
-  };
-
-  return <ScrollView contentContainerStyle={styles.container}>
-    <Text style={styles.title}>📸 Foto a PDF</Text>
-    <PasosTramite pasoActual={paso} onReiniciar={reiniciar} />
-    {paso === 1 && <View><Text style={styles.help}>Paso 1. Elige las fotos de tu documento.</Text><Pressable style={styles.primary} onPress={() => setImagenes(['pending://image-1'])}><Text style={styles.primaryText}>📷 Elegir / tomar foto</Text></Pressable><Text style={styles.counter}>{imagenes.length ? '✓ 1 foto agregada' : 'Aún no has agregado fotos'}</Text><TextInput value={nombre} onChangeText={setNombre} placeholder="Nombre del documento (opcional)" style={styles.input} placeholderTextColor="#6B7280" /> </View>}
-    {paso === 2 && <View><Text style={styles.help}>Paso 2. Mejoraremos técnicamente la imagen sin cambiar su contenido.</Text><View style={styles.info}><Text style={styles.infoText}>✨ Nitidez{`\n`}✨ Perspectiva{`\n`}✨ Brillo y contraste{`\n`}✨ Reducción de ruido</Text></View></View>}
-    {paso === 3 && <View><Text style={styles.help}>Paso 3. Revisa el resultado antes de crear el PDF.</Text><View style={styles.preview}><Text style={styles.previewText}>🖼️ Vista previa{`\n\n`}La comparación original/mejorada se conectará con el procesador de imágenes.</Text></View></View>}
-    {paso === 4 && <View><Text style={styles.help}>Paso 4. Tu documento está preparado para convertirse en PDF tamaño carta.</Text><View style={styles.info}><Text style={styles.infoText}>📄 Una página por imagen{`\n`}📐 Proporción original{`\n`}📤 Guardar y compartir</Text></View></View>}
-    <Pressable style={styles.primary} onPress={continuar}><Text style={styles.primaryText}>{paso === 4 ? '📄 Generar PDF' : 'Continuar →'}</Text></Pressable>
+  const [imagenes,setImagenes]=useState<string[]>([]); const [procesadas,setProcesadas]=useState<string[]>([]); const [nombre,setNombre]=useState(''); const [paso,setPaso]=useState(1); const [generando,setGenerando]=useState(false); const [pdfUri,setPdfUri]=useState<string|null>(null);
+  const reiniciar=()=>{setImagenes([]);setProcesadas([]);setNombre('');setPaso(1);setPdfUri(null);navigation.navigate('Home');};
+  const procesar=async()=>{if(!imagenes.length)return;setGenerando(true);await new Promise(r=>setTimeout(r,500));setProcesadas(imagenes);setGenerando(false);setPaso(3);};
+  const crearPDF=async()=>{setGenerando(true);try{setPdfUri(await generarPDF(procesadas.length?procesadas:imagenes,{nombre}));}catch(e){Alert.alert('No se pudo crear el PDF',e instanceof Error?e.message:'Inténtalo de nuevo.');}finally{setGenerando(false);}};
+  return <ScrollView contentContainerStyle={styles.container}><Text style={styles.title}>📸 Foto a PDF</Text><PasosTramite pasoActual={paso} onReiniciar={reiniciar}/>
+    {paso===1&&<View><Text style={styles.help}>Paso 1. Toma una foto o elige imágenes de tu documento.</Text><SelectorImagen multiple imagenes={imagenes} onCambiar={setImagenes}/><TextInput value={nombre} onChangeText={setNombre} placeholder="Nombre del documento (opcional)" placeholderTextColor={colors.muted} style={styles.input}/><Pressable style={styles.primary} onPress={()=>imagenes.length?setPaso(2):Alert.alert('Falta una foto','Agrega al menos una imagen.')}><Text style={styles.primaryText}>Continuar →</Text></Pressable></View>}
+    {paso===2&&<View><Text style={styles.help}>Paso 2. Preparamos las imágenes sin cambiar su contenido.</Text><View style={styles.info}><Text style={styles.infoText}>✨ Nitidez{`\n`}✨ Perspectiva{`\n`}✨ Brillo y contraste{`\n`}✨ Reducción de ruido</Text></View><Pressable style={styles.primary} onPress={procesar}><Text style={styles.primaryText}>✨ Preparar imágenes</Text></Pressable></View>}
+    {paso===3&&<VistaAntesDespues originales={imagenes} procesadas={procesadas} onConfirmar={()=>setPaso(4)} onReintentar={()=>setPaso(2)}/>} 
+    {paso===4&&!pdfUri&&<View><Text style={styles.help}>Paso 4. Crea tu PDF tamaño carta.</Text><View style={styles.info}><Text style={styles.infoText}>📄 {imagenes.length} página(s){`\n`}📐 Tamaño carta{`\n`}📏 Se conserva la proporción</Text></View><Pressable style={styles.primary} onPress={crearPDF}><Text style={styles.primaryText}>📄 Generar PDF</Text></Pressable></View>}
+    {pdfUri&&<View><Text style={styles.resultTitle}>🎉 ¡PDF listo!</Text><Text style={styles.path}>{pdfUri}</Text><Pressable style={styles.primary} onPress={()=>Alert.alert('PDF creado','El PDF fue generado correctamente.')}><Text style={styles.primaryText}>📤 Compartir PDF</Text></Pressable><Pressable style={styles.secondary} onPress={reiniciar}><Text style={styles.secondaryText}>🔄 Nuevo trámite</Text></Pressable></View>}
+    {generando&&<View style={styles.loading}><ActivityIndicator size="large" color={colors.primary}/><Text style={styles.loadingText}>Un momento…</Text></View>}
   </ScrollView>;
 }
-const styles=StyleSheet.create({container:{padding:spacing.md,paddingBottom:50,backgroundColor:colors.background,flexGrow:1},title:{fontSize:typography.title,fontWeight:'900',color:colors.text},help:{fontSize:typography.body,lineHeight:27,color:colors.text,marginVertical:spacing.md},primary:{minHeight:60,borderRadius:18,backgroundColor:colors.primary,alignItems:'center',justifyContent:'center',marginTop:spacing.md},primaryText:{color:'#FFF',fontSize:typography.button,fontWeight:'900'},counter:{fontSize:typography.body,marginTop:spacing.md,color:colors.success,fontWeight:'700'},input:{minHeight:58,borderWidth:1,borderColor:'#D1D5DB',borderRadius:16,paddingHorizontal:16,fontSize:18,marginTop:16,color:colors.text,backgroundColor:'#FFF'},info:{backgroundColor:'#F3F4F6',borderRadius:18,padding:20},infoText:{fontSize:18,lineHeight:32,color:colors.text,fontWeight:'600'},preview:{minHeight:260,borderRadius:18,backgroundColor:'#FFF',borderWidth:2,borderColor:'#E5E7EB',alignItems:'center',justifyContent:'center',padding:20},previewText:{fontSize:18,lineHeight:28,textAlign:'center',color:colors.muted}}
-);
+const styles=StyleSheet.create({container:{padding:spacing.md,paddingBottom:50,backgroundColor:colors.background,flexGrow:1},title:{fontSize:typography.title,fontWeight:'900',color:colors.text},help:{fontSize:typography.body,lineHeight:27,color:colors.text,marginVertical:spacing.md},input:{minHeight:58,borderWidth:1,borderColor:'#D1D5DB',borderRadius:16,paddingHorizontal:16,fontSize:18,marginTop:16,color:colors.text,backgroundColor:'#FFF'},primary:{minHeight:60,borderRadius:18,backgroundColor:colors.primary,alignItems:'center',justifyContent:'center',marginTop:16},primaryText:{color:'#FFF',fontSize:18,fontWeight:'900'},secondary:{minHeight:60,borderRadius:18,borderWidth:2,borderColor:colors.primary,alignItems:'center',justifyContent:'center',marginTop:12},secondaryText:{color:colors.primary,fontSize:18,fontWeight:'900'},info:{backgroundColor:'#F3F4F6',borderRadius:18,padding:20},infoText:{fontSize:18,lineHeight:32,color:colors.text,fontWeight:'600'},resultTitle:{fontSize:26,fontWeight:'900',color:colors.success,marginTop:16},path:{fontSize:14,color:colors.muted,marginTop:8},loading:{alignItems:'center',marginTop:20},loadingText:{fontSize:18,color:colors.muted,marginTop:8}});
