@@ -1,8 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors, spacing, typography } from '../theme';
-import PasosTramite from '../components/PasosTramite';
-import ArcoirisAIAssistant from '../components/ArcoirisAIAssistant';
+import { PasosTramite } from '../components/PasosTramite';
 
 interface Props {
   titulo: string;
@@ -26,7 +25,6 @@ export default function ModuloPlaceholder({ titulo, icono, descripcion, gobierno
           </Text>
         </View>
       </ScrollView>
-      <ArcoirisAIAssistant />
     </View>
   );
 }
