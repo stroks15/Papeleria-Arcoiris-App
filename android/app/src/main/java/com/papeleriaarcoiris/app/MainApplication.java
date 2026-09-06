@@ -16,6 +16,11 @@ public class MainApplication extends Application implements ReactApplication {
 
     private final ReactNativeHost reactNativeHost = new DefaultReactNativeHost(this) {
         @Override
+        public boolean getUseDeveloperSupport() {
+            return BuildConfig.DEBUG;
+        }
+
+        @Override
         protected List<ReactPackage> getPackages() {
             return new PackageList(this).getPackages();
         }
@@ -40,7 +45,8 @@ public class MainApplication extends Application implements ReactApplication {
     public ReactHost getReactHost() {
         return DefaultReactHost.getDefaultReactHost(
                 getApplicationContext(),
-                getReactNativeHost()
+                getReactNativeHost(),
+                null
         );
     }
 }
