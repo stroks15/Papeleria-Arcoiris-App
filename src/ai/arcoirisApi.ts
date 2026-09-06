@@ -20,11 +20,13 @@ type BackendResponse = {
   error?: string;
 };
 
+const API_URL = 'https://app-arcoiris496.vercel.app/api/arcoiris-ai';
+
 /** Calls the Vercel backend. The OpenAI API key is never stored in the Android app. */
 export async function askArcoirisAI(
   payload: ArcoirisAIRequest,
 ): Promise<ArcoirisAIResponse> {
-  const response = await fetch('https://papeleria-arcoiris-app.vercel.app/api/arcoiris-ai', {
+  const response = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
