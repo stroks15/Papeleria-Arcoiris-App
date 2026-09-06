@@ -1,0 +1,26 @@
+node_modules/
+
+# React Native
+.metro-health-check*
+*.log
+
+# Android
+android/.gradle/
+android/build/
+android/app/build/
+android/.cxx/
+android/local.properties
+*.keystore
+*.jks
+
+# Generated JS
+*.bundle
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
