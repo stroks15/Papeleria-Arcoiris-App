@@ -1,18 +1,38 @@
-buildscript {
-    ext {
-        buildToolsVersion = "35.0.0"
-        minSdkVersion = 24
-        compileSdkVersion = 35
-        targetSdkVersion = 35
-        ndkVersion = "27.1.12297006"
-        kotlinVersion = "2.0.21"
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
+
+react {
+    autolinkLibrariesWithApp()
+    // Empaqueta el JS dentro del APK de debug para poder instalarlo
+    // en un teléfono sin necesidad de tener Metro Bundler corriendo.
+    bundleInDebug = true
+}
+
+android {
+    namespace "com.papeleriaarcoiris.app"
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.papeleriaarcoiris.app"
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName "0.1.0"
     }
-    repositories { google(); mavenCentral() }
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.8.2")
-        classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+
+    buildTypes {
+        debug { debuggable true }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
     }
 }
 
-apply plugin: "com.facebook.react.rootproject"
+dependencies {
+    implementation("com.facebook.react:react-android")
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    }
+}
