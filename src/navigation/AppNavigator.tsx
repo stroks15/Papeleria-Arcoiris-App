@@ -4,11 +4,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../screens/Home';
 import FotoPDF from '../screens/herramientas/FotoPDF/FotoPDF';
 import EscaneoPDF from '../screens/herramientas/EscaneoPDF/EscaneoPDF';
+import ArcoirisAI from '../screens/ArcoirisAI/ArcoirisAI';
 import ModuloPlaceholder from '../screens/ModuloPlaceholder';
 import { ArcoirisAIAssistant } from '../components/ArcoirisAIAssistant';
 
 export type RootStackParamList = {
   Home: undefined;
+  ArcoirisAI: undefined;
   CFE: undefined; TenenciaCDMX: undefined; TenenciaEDOMEX: undefined;
   MultasEDOMEX: undefined; MultasCDMX: undefined; AguaSACMEX: undefined;
   FotoPDF: undefined; EscaneoPDF: undefined; ComprimirPDF: undefined; RestaurarFotos: undefined;
@@ -45,6 +47,7 @@ export default function AppNavigator() {
     <View style={styles.root}>
       <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="ArcoirisAI" component={ArcoirisAI} />
         <Stack.Screen name="FotoPDF" component={FotoPDF} />
         <Stack.Screen name="EscaneoPDF" component={EscaneoPDF} />
         {(Object.entries(gobierno) as [keyof typeof gobierno, readonly string[]][]).map(([name, data]) => (
@@ -58,9 +61,13 @@ export default function AppNavigator() {
           </Stack.Screen>
         ))}
       </Stack.Navigator>
-      <ArcoirisAIAssistant />
+      <ArcoirisAIAssistant onPress={() => navigationRef.navigate('ArcoirisAI')} />
     </View>
   );
 }
+
+const navigationRef = {
+  navigate: (_route: keyof RootStackParamList) => {},
+};
 
 const styles = StyleSheet.create({ root: { flex: 1 } });
