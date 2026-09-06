@@ -1,29 +1,35 @@
 # 🌈 Papelería Arcoíris App
 
-Aplicación Android para Papelería Arcoíris, pensada para trámites digitales y herramientas de papelería con una experiencia sencilla para adultos mayores.
+Aplicación Android en React Native + TypeScript para una papelería/centro de copiado, diseñada con una experiencia sencilla para adultos mayores.
 
-## Primera versión
+## Estado actual
 
-Incluye la base de navegación y las herramientas nativas:
+### Herramientas implementadas en esta iteración
+- 📸 **Foto a PDF**: cámara/galería, selección múltiple, revisión antes/después y generación de PDF tamaño carta.
+- 🗂️ **Escaneo múltiple a PDF**: cámara/galería, múltiples páginas, reordenamiento y PDF único tamaño carta.
 
-- 📸 Foto a PDF
-- 🗂️ Escaneo múltiple a PDF
-- 🗜️ Comprimir PDF (base preparada)
-- 🖼️ Restaurar fotos (base preparada)
-- 🗒️ Hoja de resumen visual (base preparada)
-- 📣 Anuncio/cartel (base preparada)
-- 🧠 Flashcards (base preparada)
-- 🖨️ Pedido de impresión (base preparada)
-- 🪪 Foto credencial (base preparada)
-- ⏰ Recordatorios (base preparada)
-- 📋 Formatos (base preparada)
-- 🔎 Investigación (base preparada)
+### Arquitectura preparada
+- 🗜️ Comprimir PDF
+- 🖼️ Restaurar fotos
+- 🗒️ Hoja de resumen visual
+- 📣 Anuncio/cartel
+- 🧠 Flashcards
+- 🖨️ Pedido de impresión
+- 🪪 Foto tipo credencial
+- ⏰ Recordatorios
+- 📋 Llenado de formatos
+- 🔎 Investigación
 
 ## Stack
 
-React Native + TypeScript + React Navigation.
-
-Las herramientas de papelería son nativas; los trámites gubernamentales se incorporarán posteriormente con WebView y autofill controlado.
+- React Native 0.81
+- React 19
+- TypeScript
+- React Navigation
+- `react-native-image-picker` para cámara/galería
+- `react-native-html-to-pdf` para PDF
+- `react-native-fs` para archivos
+- `react-native-share` preparado para compartir
 
 ## Instalación
 
@@ -32,4 +38,10 @@ npm install
 npx react-native run-android
 ```
 
-> El repositorio contiene el código fuente TypeScript de la primera iteración. Las dependencias nativas deben instalarse en el proyecto React Native anfitrión antes de compilar Android.
+## Nota Android
+
+Este repositorio contiene actualmente la capa JavaScript/TypeScript y la configuración de dependencias. La carpeta `android/` debe generarse/añadirse en el entorno React Native anfitrión antes de compilar el APK. Las funciones de cámara requieren los permisos Android correspondientes.
+
+## IA
+
+La mejora IA de documentos queda aislada en el flujo de procesamiento para poder conectar después una API segura sin exponer claves dentro de la aplicación. Mientras no haya una API configurada, las imágenes originales se conservan sin alteraciones.
