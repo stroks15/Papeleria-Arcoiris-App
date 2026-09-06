@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import Home from '../screens/Home';
 import FotoPDF from '../screens/herramientas/FotoPDF/FotoPDF';
 import EscaneoPDF from '../screens/herramientas/EscaneoPDF/EscaneoPDF';
@@ -42,6 +43,11 @@ const herramientas = {
   Investigacion: ['🔎', 'Investigación de un tema', 'Organiza una investigación con fuentes verificables.'],
 } as const;
 
+function GlobalAssistant() {
+  const navigation = useNavigation();
+  return <ArcoirisAIAssistant onPress={() => navigation.navigate('ArcoirisAI' as never)} />;
+}
+
 export default function AppNavigator() {
   return (
     <View style={styles.root}>
@@ -61,13 +67,9 @@ export default function AppNavigator() {
           </Stack.Screen>
         ))}
       </Stack.Navigator>
-      <ArcoirisAIAssistant onPress={() => navigationRef.navigate('ArcoirisAI')} />
+      <GlobalAssistant />
     </View>
   );
 }
-
-const navigationRef = {
-  navigate: (_route: keyof RootStackParamList) => {},
-};
 
 const styles = StyleSheet.create({ root: { flex: 1 } });
