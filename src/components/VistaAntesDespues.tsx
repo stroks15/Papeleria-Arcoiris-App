@@ -1,0 +1,12 @@
+import React from 'react';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { colors, spacing, typography } from '../theme';
+
+interface Props { originales: string[]; procesadas: string[]; onConfirmar: () => void; onReintentar: () => void; }
+export function VistaAntesDespues({ originales, procesadas, onConfirmar, onReintentar }: Props) {
+  return <ScrollView contentContainerStyle={styles.container}><Text style={styles.title}>🔎 Revisa tus fotos</Text><Text style={styles.help}>Compara el original con la preparación antes de crear el PDF.</Text>
+    {originales.map((original,i)=><View key={`${original}-${i}`} style={styles.block}><Text style={styles.label}>Página {i+1}</Text><View style={styles.compare}><View style={styles.column}><Text style={styles.caption}>Original</Text><Image source={{uri:original}} style={styles.image} resizeMode="contain"/></View><View style={styles.column}><Text style={styles.caption}>Preparada</Text><Image source={{uri:procesadas[i]||original}} style={styles.image} resizeMode="contain"/></View></View></View>)}
+    <Pressable style={styles.primary} onPress={onConfirmar}><Text style={styles.primaryText}>✅ Está bien, continuar</Text></Pressable><Pressable style={styles.secondary} onPress={onReintentar}><Text style={styles.secondaryText}>↩️ Volver a procesar</Text></Pressable>
+  </ScrollView>;
+}
+const styles=StyleSheet.create({container:{padding:spacing.md,paddingBottom:40,backgroundColor:colors.background},title:{fontSize:typography.title,fontWeight:'900',color:colors.text},help:{fontSize:typography.body,lineHeight:27,color:colors.text,marginVertical:spacing.md},block:{marginBottom:spacing.md},label:{fontSize:18,fontWeight:'900',marginBottom:8,color:colors.text},compare:{flexDirection:'row',gap:10},column:{flex:1,backgroundColor:'#FFF',borderRadius:16,padding:8,minHeight:190},caption:{fontSize:16,fontWeight:'800',textAlign:'center',color:colors.muted,marginBottom:4},image:{width:'100%',height:150},primary:{minHeight:60,borderRadius:18,backgroundColor:colors.primary,alignItems:'center',justifyContent:'center',marginTop:10},primaryText:{color:'#FFF',fontSize:typography.button,fontWeight:'900'},secondary:{minHeight:60,borderRadius:18,borderWidth:2,borderColor:colors.primary,alignItems:'center',justifyContent:'center',marginTop:10},secondaryText:{color:colors.primary,fontSize:typography.button,fontWeight:'900'}});
