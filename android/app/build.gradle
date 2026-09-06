@@ -8,12 +8,12 @@ react {
 
 android {
     namespace "com.papeleriaarcoiris.app"
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.papeleriaarcoiris.app"
-        minSdk rootProject.ext.minSdkVersion
-        targetSdk rootProject.ext.targetSdkVersion
+        minSdk 24
+        targetSdk 35
         versionCode 1
         versionName "0.1.0"
     }
