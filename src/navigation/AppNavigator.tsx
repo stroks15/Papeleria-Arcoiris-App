@@ -5,7 +5,7 @@ import Home from '../screens/Home';
 import FotoPDF from '../screens/herramientas/FotoPDF/FotoPDF';
 import EscaneoPDF from '../screens/herramientas/EscaneoPDF/EscaneoPDF';
 import ModuloPlaceholder from '../screens/ModuloPlaceholder';
-import ArcoirisAIAssistant from '../components/ArcoirisAIAssistant';
+import { ArcoirisAIAssistant } from '../components/ArcoirisAIAssistant';
 
 export type RootStackParamList = {
   Home: undefined;
