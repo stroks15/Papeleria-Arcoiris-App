@@ -7,19 +7,10 @@ import FotoPDF from './src/screens/herramientas/FotoPDF/FotoPDF';
 import EscaneoPDF from './src/screens/herramientas/EscaneoPDF/EscaneoPDF';
 
 export type RootStackParamList = {
-  Home: undefined;
-  FotoPDF: undefined;
-  EscaneoPDF: undefined;
-  ComprimirPDF: undefined;
-  RestaurarFotos: undefined;
-  Cheatsheet: undefined;
-  AnuncioLocal: undefined;
-  Flashcards: undefined;
-  PedidoImpresion: undefined;
-  FotoCredencial: undefined;
-  Recordatorios: undefined;
-  Formatos: undefined;
-  Investigacion: undefined;
+  Home: undefined; FotoPDF: undefined; EscaneoPDF: undefined;
+  ComprimirPDF: undefined; RestaurarFotos: undefined; Cheatsheet: undefined;
+  AnuncioLocal: undefined; Flashcards: undefined; PedidoImpresion: undefined;
+  FotoCredencial: undefined; Recordatorios: undefined; Formatos: undefined; Investigacion: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
