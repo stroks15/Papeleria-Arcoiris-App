@@ -37,12 +37,21 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Verify React Native CLI config
+        run: |
+          npx react-native config > /tmp/react-native-config.json
+          node -e "const c=require('/tmp/react-native-config.json'); if(!c.project?.android?.packageName){console.error(JSON.stringify(c.project||{},null,2)); process.exit(1)}; console.log('Android packageName:', c.project.android.packageName)"
+
+      - name: Clean Android generated files
+        working-directory: android
+        run: gradle --no-daemon clean
+
       - name: Verify Gradle
         run: gradle --version
 
       - name: Build Debug APK
         working-directory: android
-        run: gradle --no-daemon assembleDebug
+        run: gradle --no-daemon assembleDebug --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
