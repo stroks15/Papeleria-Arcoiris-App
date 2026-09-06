@@ -53,7 +53,8 @@ public class MainApplication extends Application implements ReactApplication {
     public ReactHost getReactHost() {
         return DefaultReactHost.getDefaultReactHost(
                 getApplicationContext(),
-                getReactNativeHost()
+                getReactNativeHost(),
+                null
         );
     }
 
