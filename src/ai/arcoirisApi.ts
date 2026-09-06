@@ -12,6 +12,14 @@ export type ArcoirisAIResponse = {
   error?: string;
 };
 
+type BackendResponse = {
+  ok: boolean;
+  reply?: string;
+  action?: string;
+  parameters?: Record<string, unknown>;
+  error?: string;
+};
+
 /** Calls the Vercel backend. The OpenAI API key is never stored in the Android app. */
 export async function askArcoirisAI(
   payload: ArcoirisAIRequest,
@@ -19,12 +27,26 @@ export async function askArcoirisAI(
   const response = await fetch('https://papeleria-arcoiris-app.vercel.app/api/arcoiris-ai', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      ...payload,
+      context: {
+        ...(payload.context || {}),
+        currentModule: payload.currentModule || 'inicio',
+        currentStep: payload.currentStep || 1,
+      },
+    }),
   });
 
-  const data = (await response.json()) as ArcoirisAIResponse;
+  const data = (await response.json()) as BackendResponse;
   if (!response.ok || !data.ok) {
     throw new Error(data.error || 'No fue posible conectar con ArcoirisAI.');
   }
-  return data;
+
+  return {
+    ok: true,
+    message: data.reply,
+    action: data.action
+      ? { name: data.action, parameters: data.parameters || {} }
+      : undefined,
+  };
 }
