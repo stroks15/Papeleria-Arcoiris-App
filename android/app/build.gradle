@@ -4,7 +4,6 @@ apply plugin: "com.facebook.react"
 
 react {
     autolinkLibrariesWithApp()
-    bundleInDebug = true
 }
 
 android {
@@ -20,7 +19,9 @@ android {
     }
 
     buildTypes {
-        debug { debuggable true }
+        debug {
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
