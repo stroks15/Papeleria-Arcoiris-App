@@ -4,16 +4,17 @@ apply plugin: "com.facebook.react"
 
 react {
     autolinkLibrariesWithApp()
+    bundleInDebug = true
 }
 
 android {
     namespace "com.papeleriaarcoiris.app"
-    compileSdk 35
+    compileSdk rootProject.ext.compileSdkVersion
 
     defaultConfig {
         applicationId "com.papeleriaarcoiris.app"
-        minSdk 24
-        targetSdk 35
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "0.1.0"
     }
